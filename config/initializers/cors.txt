@@ -1,0 +1,21 @@
+# Be sure to restart your server when you modify this file.
+
+# Avoid CORS issues when API is called from the frontend app.
+# Handle Cross-Origin Resource Sharing (CORS) in order to accept cross-origin Ajax requests.
+
+# Read more: https://github.com/cyu/rack-cors
+
+
+# 20250814 next.js connect test
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    #origins 'http://localhost:3000' # Next.jsの開発URL。必要に応じて追加
+    #resource '*',
+    #  headers: :any,
+    #  expose: %w[Authorization],
+    #  methods: %i[get post put patch delete options head]
+
+    origins ENV.fetch("NEXT_ORIGIN", "*")  # 本番は正確なオリジンに絞る
+    resource "/api/*", headers: :any, methods: [:post, :options]
+  end
+end
