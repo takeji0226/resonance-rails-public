@@ -34,14 +34,14 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     # API 系
     resource "/api/*",
              headers: :any,
-             expose: ["Authorization"],
+             expose: [ "Authorization" ],
              methods: %i[get post put patch delete options head],
              credentials: true
 
     # 認証系
     resource "/users/*",
              headers: :any,
-             expose: ["Authorization"],
+             expose: [ "Authorization" ],
              methods: %i[get post put patch delete options head],
              credentials: true
 
