@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_26_020800) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_08_080017) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -62,42 +62,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_26_020800) do
     t.check_constraint "presence_penalty >= '-2'::integer::numeric AND presence_penalty <= 2::numeric", name: "chk_presence_penalty"
     t.check_constraint "temperature >= 0::numeric AND temperature <= 2::numeric", name: "chk_temperature_range"
     t.check_constraint "top_p >= 0::numeric AND top_p <= 1::numeric", name: "chk_top_p_range"
-  end
-
-  create_table "initial_questions", force: :cascade do |t|
-    t.text "body"
-    t.string "tag"
-    t.boolean "active"
-    t.integer "weight"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "onboarding_exchanges", force: :cascade do |t|
-    t.bigint "onboarding_session_id", null: false
-    t.bigint "initial_question_id", null: false
-    t.text "user_reply"
-    t.jsonb "focus_points"
-    t.string "angle"
-    t.string "reply_style"
-    t.text "assistant_reply"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["initial_question_id"], name: "index_onboarding_exchanges_on_initial_question_id"
-    t.index ["onboarding_session_id"], name: "index_onboarding_exchanges_on_onboarding_session_id"
-  end
-
-  create_table "onboarding_sessions", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "stage"
-    t.integer "cycles_target"
-    t.integer "cycles_done"
-    t.jsonb "summary_beliefs"
-    t.jsonb "summary_likes"
-    t.jsonb "summary_strengths"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_onboarding_sessions_on_user_id"
   end
 
   create_table "style_guides", force: :cascade do |t|
@@ -155,9 +119,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_26_020800) do
 
   add_foreign_key "few_shots", "user_agent_versions"
   add_foreign_key "generation_settings", "user_agent_versions"
-  add_foreign_key "onboarding_exchanges", "initial_questions"
-  add_foreign_key "onboarding_exchanges", "onboarding_sessions"
-  add_foreign_key "onboarding_sessions", "users"
   add_foreign_key "style_guides", "user_agent_versions"
   add_foreign_key "user_agent_versions", "user_agents"
   add_foreign_key "user_agents", "users"

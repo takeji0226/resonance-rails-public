@@ -5,14 +5,11 @@ class Api::OnboardingController < ApplicationController
   # -----------------------------------------------------
   # GET /api/onboarding/status
   # 現在のオンボーディング進捗を返す。
-  # 例: { stage: "pebble", cycles_done: 1, cycles_target: 4 }
+  # 例: { stage: "pebble"}
   # -----------------------------------------------------
   def status
-    session = current_user.onboarding_sessions.order(created_at: :desc).first
     render json: {
       stage: current_user.onboarding_stage || "none",
-      cycles_done: session&.cycles_done || 0,
-      cycles_target: session&.cycles_target || 0
     }
   end
 
