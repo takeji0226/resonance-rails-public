@@ -8,7 +8,7 @@ class Api::PingsController < ApplicationController
     response.headers["X-Accel-Buffering"] = "no"
 
     3.times do |i|
-      response.stream.write "data: #{ {tick: i+1, msg: "hello"}.to_json }\n\n"
+      response.stream.write "data: #{ { tick: i+1, msg: "hello" }.to_json }\n\n"
       sleep 0.2
     end
   ensure

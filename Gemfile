@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # 20250814_next.js connect gem
-gem 'rack-cors'
+gem "rack-cors"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.2.2", ">= 7.2.2.2"
@@ -43,13 +43,16 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "faraday"
-  gem "dotenv-rails", groups: [:development, :test]  # ← まだなら
+  gem "dotenv-rails", groups: [ :development, :test ]  # ← まだなら
 
   gem "devise"
   gem "devise-jwt"
   gem "rack-cors"
-  gem 'dotenv-rails'
-
+  gem "dotenv-rails"
 end
 
 
+
+gem "rubocop", "~> 1.79"
+gem "rubocop-rails", "~> 2.33"
+gem "rubocop-performance", "~> 1.25"

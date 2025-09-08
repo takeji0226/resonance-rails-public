@@ -48,7 +48,7 @@ class DropFewShots < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :few_shots, [:user_agent_version_id, :role, :rank],
+    add_index :few_shots, [ :user_agent_version_id, :role, :rank ],
               unique: true, name: "idx_fewshots_uav_role_rank"
     add_index :few_shots, :user_agent_version_id
 

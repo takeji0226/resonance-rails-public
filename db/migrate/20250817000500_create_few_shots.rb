@@ -14,7 +14,7 @@ class CreateFewShots < ActiveRecord::Migration[7.2]
     end
 
     add_index :few_shots,
-              [:user_agent_version_id, :role, :rank],
+              [ :user_agent_version_id, :role, :rank ],
               unique: true,
               name: "idx_fewshots_uav_role_rank"
   end

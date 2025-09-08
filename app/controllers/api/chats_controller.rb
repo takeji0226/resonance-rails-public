@@ -1,17 +1,17 @@
 # app/controllers/api/chats_controller.rb
 class Api::ChatsController < ApplicationController
   include ActionController::Live  # stream 用
-  #protect_from_forgery with: :null_session
+  # protect_from_forgery with: :null_session
 
   # 設定ロード：uid から最新ActiveのUAVとGSを取る
   def load_generation(uid)
-    return [nil, nil] if uid.blank?
+    return [ nil, nil ] if uid.blank?
     uav = UserAgentVersion.latest_active_for_user(uid).first
     gs  = uav&.generation_setting
-    [uav, gs]
+    [ uav, gs ]
   end
 
-# build_messages を「DBのinstructions 優先」に変更
+  # build_messages を「DBのinstructions 優先」に変更
   def build_messages(params, uav)
     history = Array(params[:history]).map { |m| { role: m[:role], content: m[:content] } }
     user    = String(params[:message].to_s)
@@ -22,12 +22,12 @@ class Api::ChatsController < ApplicationController
         （※DBにinstructionsが無い場合のフォールバック）
       SYS
 
-    [{ role: "system", content: system_content },
+    [ { role: "system", content: system_content },
      *history.last(20),
-     { role: "user", content: user }]
+     { role: "user", content: user } ]
   end
 
-    # GS から OpenAI body を合成（存在キーのみ入れる）
+  # GS から OpenAI body を合成（存在キーのみ入れる）
   def build_openai_body(model_fallback:, messages:, gs:, stream: false)
     body = {
       model:      gs&.model.presence || model_fallback,
@@ -111,7 +111,7 @@ class Api::ChatsController < ApplicationController
     end
 
     if upstream.status != 200
-      response.stream.write "data: #{ {error: upstream.body}.to_json }\n\n"
+      response.stream.write "data: #{ { error: upstream.body }.to_json }\n\n"
       return
     end
 
@@ -131,7 +131,7 @@ class Api::ChatsController < ApplicationController
 
     ConversationLogger.log!(uid: uid, model: body[:model], messages: messages, reply: full_text)
   rescue => e
-    response.stream.write "data: #{ {error: e.message}.to_json }\n\n"
+    response.stream.write "data: #{ { error: e.message }.to_json }\n\n"
   ensure
     response.stream.close
   end

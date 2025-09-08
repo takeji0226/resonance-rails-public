@@ -12,6 +12,6 @@ class CreateUserAgentVersions < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :user_agent_versions, [:user_agent_id, :version], unique: true
+    add_index :user_agent_versions, [ :user_agent_id, :version ], unique: true
   end
 end

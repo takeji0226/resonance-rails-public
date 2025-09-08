@@ -9,9 +9,7 @@ class Api::OnboardingController < ApplicationController
   # -----------------------------------------------------
   def status
     render json: {
-      stage: current_user.onboarding_stage || "none",
+      stage: current_user.onboarding_stage || "none"
     }
   end
-
-
 end

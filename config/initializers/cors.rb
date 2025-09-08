@@ -11,16 +11,16 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins ENV["FRONTEND_ORIGIN"] # 本番は正確なオリジンに絞る
 
-    #DBリソース、外部APIアクセス系許可
+    # DBリソース、外部APIアクセス系許可
     resource "/api/*",
       headers: :any,
-      expose: ["Authorization"],
+      expose: [ "Authorization" ],
       methods: %i[get post put patch delete options head],
       credentials: true
-    #認証系許可
+    # 認証系許可
     resource "/users/*",
       headers: :any,
-      expose: ["Authorization"],
+      expose: [ "Authorization" ],
       methods: %i[get post put patch delete options head],
       credentials: true
 

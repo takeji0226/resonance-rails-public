@@ -1,6 +1,6 @@
 # app/controllers/api/user_agents_controller.rb
 class Api::UserAgentsController < ApplicationController
-  #protect_from_forgery with: :null_session
+  # protect_from_forgery with: :null_session
   skip_forgery_protection
 
   def show

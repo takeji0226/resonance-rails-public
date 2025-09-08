@@ -1,6 +1,6 @@
 # app/controllers/api/users_controller.rb
 class Api::UsersController < ApplicationController
-before_action :authenticate_user!, only: [:me]  # 追加
+before_action :authenticate_user!, only: [ :me ]  # 追加
   # 追加: ログイン中ユーザ
   def me
     u = current_user

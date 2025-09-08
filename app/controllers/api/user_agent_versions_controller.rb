@@ -14,7 +14,7 @@ class Api::UserAgentVersionsController < ApplicationController
 
   private
   def uav_params
-      # リクエストが { user_agent_version: { ... } } ならその中をpermit
+    # リクエストが { user_agent_version: { ... } } ならその中をpermit
     # フラット({ user_agent_id: ..., version: ... })ならトップをpermit
     src = params[:user_agent_version].present? ? params.require(:user_agent_version) : params
     src.permit(:user_agent_id, :version, :instructions, :status, :notes)

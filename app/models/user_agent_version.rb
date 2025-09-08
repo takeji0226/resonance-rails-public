@@ -12,5 +12,4 @@ class UserAgentVersion < ApplicationRecord
   scope :latest_active_for_user, ->(user_id) {
     for_user(user_id).status_active.order(updated_at: :desc).limit(1)
   }
-
 end

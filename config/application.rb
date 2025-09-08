@@ -29,13 +29,13 @@ module Backend
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-      # ★ APIモードでもCookie/Sessionを使えるようにする
+    # ★ APIモードでもCookie/Sessionを使えるようにする
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore,
-                        key: '_resonance_session',
+                        key: "_resonance_session",
                         secure: Rails.env.production?,
                         same_site: :lax
-  # Flashは不要なら省略可
-  # config.middleware.use ActionDispatch::Flash
+    # Flashは不要なら省略可
+    # config.middleware.use ActionDispatch::Flash
   end
 end
