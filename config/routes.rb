@@ -35,10 +35,6 @@ Rails.application.routes.draw do
   namespace :api do
   resource :onboarding, only: [],controller: "onboarding" do
     get  :status      # 進捗照会（ステージ・回数）
-    post :start       # セッション開始（3〜5回のターゲット確定）
-    post :pebble      # 初期問いをランダムで1つ返す
-    post :reply       # ユーザ返答を受け取り → 抽出/角度/返しの型 → 返信生成
-    post :finish      # まとめ（信念/好き/得意）を返し、ステージdoneに
   end
 end
 
