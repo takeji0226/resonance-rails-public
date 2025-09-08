@@ -10,30 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_08_080017) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_08_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "few_shot_role", ["user", "assistant"]
   create_enum "reasoning_effort", ["low", "medium", "high"]
   create_enum "response_format", ["text", "json", "json_schema"]
   create_enum "style_guide_status", ["draft", "active", "archived"]
   create_enum "tool_choice", ["auto", "required", "none"]
   create_enum "user_agent_version_status", ["draft", "active", "archived"]
-
-  create_table "few_shots", force: :cascade do |t|
-    t.bigint "user_agent_version_id", null: false
-    t.enum "role", null: false, enum_type: "few_shot_role"
-    t.text "content", null: false
-    t.string "tag"
-    t.integer "rank", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_agent_version_id", "role", "rank"], name: "idx_fewshots_uav_role_rank", unique: true
-    t.index ["user_agent_version_id"], name: "index_few_shots_on_user_agent_version_id"
-  end
 
   create_table "generation_settings", force: :cascade do |t|
     t.bigint "user_agent_version_id", null: false
@@ -117,7 +104,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_08_080017) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "few_shots", "user_agent_versions"
   add_foreign_key "generation_settings", "user_agent_versions"
   add_foreign_key "style_guides", "user_agent_versions"
   add_foreign_key "user_agent_versions", "user_agents"
