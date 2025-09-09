@@ -40,15 +40,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    # ▶ ここがポイント
-    # DATABASE_URL は渡さず、PGHOST/PGUSER/PGPASSWORD など接続情報のみを渡す。
-    # （test DB 名は config/database.yml の test 設定に従う）
+    # Rails起動時に必要なものはジョブ全体のenvで
     env:
       RAILS_ENV: test
-      PGHOST: localhost
-      PGPORT: 5432
-      PGUSER: postgres
-      PGPASSWORD: postgres
       DEVISE_JWT_SECRET_KEY: ${{ secrets.DEVISE_JWT_SECRET_KEY }}
       RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
 
@@ -67,16 +61,6 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-      # redis:
-      #   image: redis:7
-      #   ports:
-      #     - 6379:6379
-      #   options: >-
-      #     --health-cmd="redis-cli ping"
-      #     --health-interval=10s
-      #     --health-timeout=5s
-      #     --health-retries=5
-
     steps:
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client
@@ -90,11 +74,23 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      # ▼ db:test:prepare ではなく db:prepare を使用（現在接続DBのdrop問題を避ける）
+      # database.yml の test: database 名をERB評価込みで読み取り → 環境変数へ
+      - name: Detect test DB name from config/database.yml
+        run: |
+          ruby -ryaml -rerb -e 'cfg = YAML.safe_load(ERB.new(File.read("config/database.yml")).result, aliases: true);
+                                 db = (cfg["test"] && cfg["test"]["database"]) || "rails_test";
+                                 puts "CI_TEST_DB_NAME=#{db}";
+                                 File.open(ENV["GITHUB_ENV"], "a"){|f| f.puts "CI_TEST_DB_NAME=#{db}"}'
+
+      # 読み取ったDB名で、postgres/postgres の資格情報を使う DATABASE_URL を付与して db:prepare
       - name: Prepare DB (test)
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/${{ env.CI_TEST_DB_NAME }}
         run: bin/rails db:prepare
 
       - name: Run tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/${{ env.CI_TEST_DB_NAME }}
         run: bin/rails test test:system
 
       - name: Keep screenshots from failed system tests
