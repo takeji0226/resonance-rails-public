@@ -40,14 +40,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    # テスト実行時に必要な環境変数をジョブ全体に付与
+    # ▶ ここがポイント
+    # DATABASE_URL は渡さず、PGHOST/PGUSER/PGPASSWORD など接続情報のみを渡す。
+    # （test DB 名は config/database.yml の test 設定に従う）
     env:
       RAILS_ENV: test
-      # DB名まで含めて明示（接続先の曖昧さを排除）
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-      # devise-jwt 初期化で必須
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
       DEVISE_JWT_SECRET_KEY: ${{ secrets.DEVISE_JWT_SECRET_KEY }}
-      # credentials を test 環境で参照する場合に備えて
       RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
 
     services:
@@ -59,7 +61,6 @@ jobs:
           POSTGRES_DB: postgres
         ports:
           - 5432:5432
-        # DB が利用可能になるまで待つ（接続失敗の揺らぎ対策）
         options: >-
           --health-cmd="pg_isready -U postgres -d postgres"
           --health-interval=10s
@@ -89,8 +90,12 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Prepare and run tests
-        run: bin/rails db:test:prepare test test:system
+      # ▼ db:test:prepare ではなく db:prepare を使用（現在接続DBのdrop問題を避ける）
+      - name: Prepare DB (test)
+        run: bin/rails db:prepare
+
+      - name: Run tests
+        run: bin/rails test test:system
 
       - name: Keep screenshots from failed system tests
         if: failure()
