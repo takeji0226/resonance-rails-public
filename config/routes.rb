@@ -36,9 +36,16 @@ Rails.application.routes.draw do
   end
 
   # 20250826 オンボード用リソースルーティング
-  namespace :api do
+namespace :api do
   resource :onboarding, only: [], controller: "onboarding" do
     get  :status      # 進捗照会（ステージ）
   end
 end
+
+namespace :api do
+  namespace :v1 do
+    resource :me, only: [:show]
+  end
+end
+
 end
