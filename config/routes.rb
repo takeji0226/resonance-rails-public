@@ -30,7 +30,6 @@ Rails.application.routes.draw do
     post "chat/stream", to: "chats#stream"   # ストリーム（SSE）
     post "ping/stream", to: "pings#stream"  # ← Api::PingsController を探しに行く
     # チャット保存・履歴表示・リセット
-    post "chat",          to: "chats#create"
     get  "chat/history",  to: "chats#history"
     post "chat/reset",    to: "chats#reset"   # 任意
   end
