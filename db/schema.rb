@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_08_090000) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_14_000110) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,28 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_08_090000) do
   create_enum "style_guide_status", ["draft", "active", "archived"]
   create_enum "tool_choice", ["auto", "required", "none"]
   create_enum "user_agent_version_status", ["draft", "active", "archived"]
+
+  create_table "chat_messages", force: :cascade do |t|
+    t.bigint "conversation_id", null: false
+    t.string "role", null: false
+    t.text "content", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "created_at"], name: "index_chat_messages_on_conversation_id_and_created_at"
+    t.index ["conversation_id"], name: "index_chat_messages_on_conversation_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title"
+    t.boolean "archived", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "archived"], name: "index_conversations_on_user_id_and_archived"
+    t.index ["user_id"], name: "idx_unique_active_conversation_per_user", unique: true, where: "(archived = false)"
+    t.index ["user_id"], name: "index_conversations_on_user_id"
+  end
 
   create_table "generation_settings", force: :cascade do |t|
     t.bigint "user_agent_version_id", null: false
@@ -104,6 +126,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_08_090000) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "chat_messages", "conversations"
+  add_foreign_key "conversations", "users"
   add_foreign_key "generation_settings", "user_agent_versions"
   add_foreign_key "style_guides", "user_agent_versions"
   add_foreign_key "user_agent_versions", "user_agents"

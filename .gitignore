@@ -33,3 +33,12 @@
 /config/master.key
 /config/credentials/*.key
 *:Zone.Identifier
+
+# === secrets (絶対に公開しない) ===
+.env
+.env.*.local
+config/master.key
+config/credentials.yml.enc
+*.pem
+*.key
+*.crt

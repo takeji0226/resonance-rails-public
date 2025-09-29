@@ -29,12 +29,16 @@ Rails.application.routes.draw do
     post "chat",        to: "chats#create"   # 非ストリーム（JSON）
     post "chat/stream", to: "chats#stream"   # ストリーム（SSE）
     post "ping/stream", to: "pings#stream"  # ← Api::PingsController を探しに行く
+    # チャット保存・履歴表示・リセット
+    post "chat",          to: "chats#create"
+    get  "chat/history",  to: "chats#history"
+    post "chat/reset",    to: "chats#reset"   # 任意
   end
 
   # 20250826 オンボード用リソースルーティング
   namespace :api do
   resource :onboarding, only: [], controller: "onboarding" do
-    get  :status      # 進捗照会（ステージ・回数）
+    get  :status      # 進捗照会（ステージ）
   end
 end
 end
