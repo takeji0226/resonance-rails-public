@@ -41,11 +41,4 @@ namespace :api do
     get  :status      # 進捗照会（ステージ）
   end
 end
-
-namespace :api do
-  namespace :v1 do
-    resource :me, only: [:show]
-  end
-end
-
 end
