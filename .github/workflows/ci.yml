@@ -95,7 +95,7 @@ jobs:
 
       - name: Keep screenshots from failed system tests
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: screenshots
           path: ${{ github.workspace }}/tmp/screenshots
