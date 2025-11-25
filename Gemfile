@@ -54,5 +54,5 @@ end
 
 
 gem "rubocop", "~> 1.79"
-gem "rubocop-rails", "~> 2.33"
+gem "rubocop-rails", "~> 2.34"
 gem "rubocop-performance", "~> 1.25"
